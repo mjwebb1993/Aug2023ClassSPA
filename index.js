@@ -34,7 +34,7 @@ router.hooks({
       case "Pizza":
         // New Axios get request utilizing already made environment variable
         axios
-          .get(`https://sc-pizza-api.onrender.com/pizzas`)
+          .get(process.env.PIZZA_PLACE_API_URL)
           .then(response => {
             // We need to store the response to the state, in the next step but in the meantime let's see what it looks like so that we know what to store from the response.
             store.Pizza.pizzas = response.data;
