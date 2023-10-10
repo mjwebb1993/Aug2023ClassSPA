@@ -15,7 +15,9 @@ export default state => html`
         .map(pizza => {
           return `<tr><td>${pizza.crust}</td><td>${pizza.cheese}</td><td>${
             pizza.sauce
-          }</td><td>${pizza.toppings.join(" & ")}</td><td>${pizza.customer}</td></tr>`;
+          }</td><td>${pizza.toppings.join(" & ")}</td><td>${
+            pizza.customer
+          }</td></tr>`;
         })
         .join("")}
     </table>
