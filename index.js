@@ -7,6 +7,9 @@ import axios from "axios";
 const router = new Navigo("/");
 
 function render(state = store.Home) {
+  // for (let key in state) {
+  //   console.log("Key: " + key + "  Value: " + state[key]);
+  // }
   document.querySelector("#root").innerHTML = `
     ${Header(state)}
     ${Nav(store.Links)}
@@ -27,7 +30,10 @@ function afterRender() {
 router.hooks({
   before: (done, params) => {
     // We need to know what view we are on to know what data to fetch
-    const view = params && params.data && params.data.view ? capitalize(params.data.view) : "Home";
+    const view =
+      params && params.data && params.data.view
+        ? capitalize(params.data.view)
+        : "Home";
     // Add a switch case statement to handle multiple routes
     switch (view) {
       // Add a case for each view that needs data from an API
@@ -43,6 +49,7 @@ router.hooks({
             const kelvinToFahrenheit = kelvinTemp =>
               Math.round((kelvinTemp - 273.15) * (9 / 5) + 32);
 
+            // console.log(response.data);
             // Create an object to be stored in the Home state from the response
             store.Home.weather = {
               city: response.data.name,
@@ -53,7 +60,7 @@ router.hooks({
 
             done();
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
             done();
           });
@@ -69,7 +76,7 @@ router.hooks({
             console.log(store.Pizza);
             done();
           })
-          .catch((error) => {
+          .catch(error => {
             console.log("It puked", error);
             done();
           });
@@ -78,13 +85,15 @@ router.hooks({
         done();
     }
   },
-  already: (params) => {
-    const view = params && params.data && params.data.view ? capitalize(params.data.view) : "Home";
+  already: params => {
+    const view =
+      params && params.data && params.data.view
+        ? capitalize(params.data.view)
+        : "Home";
 
     render(store[view]);
   }
 });
-
 
 router
   .on({
@@ -92,8 +101,6 @@ router
     ":view": params => {
       let view = capitalize(params.data.view);
       if (view in store) {
-
-
         render(store[view]);
       } else {
         render(store.Viewnotfound);
