@@ -2,7 +2,8 @@ import { Header, Nav, Main, Footer } from "./components";
 import * as store from "./store";
 import Navigo from "navigo";
 import { capitalize } from "lodash";
-import axios from "axios";
+import { beforeRouterHook as homeBeforeHook } from "./components/views/Home.js";
+import { beforeRouterHook as pizzaBeforeHook } from "./components/views/Pizza.js";
 
 const router = new Navigo("/");
 
@@ -37,49 +38,12 @@ router.hooks({
     // Add a switch case statement to handle multiple routes
     switch (view) {
       // Add a case for each view that needs data from an API
-      // New Case for the Home View
       case "Home":
-        axios
-          // Get request to retrieve the current weather data using the API key and providing a city name
-          .get(
-            `https://api.openweathermap.org/data/2.5/weather?appid=${process.env.OPEN_WEATHER_MAP_API_KEY}&q=st%20louis`
-          )
-          .then(response => {
-            // Convert Kelvin to Fahrenheit since OpenWeatherMap does provide otherwise
-            const kelvinToFahrenheit = kelvinTemp =>
-              Math.round((kelvinTemp - 273.15) * (9 / 5) + 32);
-
-            // console.log(response.data);
-            // Create an object to be stored in the Home state from the response
-            store.Home.weather = {
-              city: response.data.name,
-              temp: kelvinToFahrenheit(response.data.main.temp),
-              feelsLike: kelvinToFahrenheit(response.data.main.feels_like),
-              description: response.data.weather[0].main
-            };
-
-            done();
-          })
-          .catch(err => {
-            console.log(err);
-            done();
-          });
+        homeBeforeHook(done, params);
         break;
 
       case "Pizza":
-        // New Axios get request utilizing already made environment variable
-        axios
-          .get(`${process.env.PIZZA_PLACE_API_URL}/pizzas`)
-          .then(response => {
-            // We need to store the response to the state, in the next step but in the meantime let's see what it looks like so that we know what to store from the response.
-            store.Pizza.pizzas = response.data;
-            console.log(store.Pizza);
-            done();
-          })
-          .catch(error => {
-            console.log("It puked", error);
-            done();
-          });
+        pizzaBeforeHook(done, params);
         break;
       default:
         done();
